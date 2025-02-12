@@ -6,21 +6,21 @@ STEP 1: Clone the repository inside your oh-my-zsh repo:
 ```shell
 git clone https://github.com/likai-hust/chat-zsh.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/chat-zsh
 ```
-STEP 2: Install jq moudle for parse json.
-```
-brew install jq
-```
 
-STEP 2.1(optional) Install openai python module(python mode, default mode is call openai through curl).
+STEP 2: Append plugins and openai(or deepseek) API key、model name in your `.zshrc` file:
 ```
-pip install openai
-```
-STEP 3: Append plugins and openai key in your `.zshrc` file:
-```
-# openai key
+# API key
 OPENAI_API_KEY="YOU_API_KEY"
-# OPENAI_ENDPOINT="openai_proxy" # for chinese user, can use an proxy api :https://api.openai-proxy.com/v1/chat/completions, see https://www.openai-proxy.com
-
+```
+```
+# your model name, or "deepseek-chat"
+MODEL_NAME="gtp-3.5-turbo" 
+```
+```
+# default is https://api.openai.com/v1/chat/completions, or https://api.deepseek.com/v1/chat/completions
+# OPENAI_ENDPOINT="api endpoint" 
+```
+```
 plugins=(git chat-zsh) # append chat-zsh to plugins
 ```
 
@@ -29,7 +29,7 @@ and then command `source ~/.zshrc` to enable the plugin. Type message as follow:
 ```
 $ # Generate a rsa key, length 2048
 ```
-th command will be generated as:
+the command will be generated as:
 ```
 $ ssh-keygen -t rsa -b 2048
 ```

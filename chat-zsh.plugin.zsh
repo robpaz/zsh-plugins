@@ -1,23 +1,18 @@
 # After entering "# command described in natural language", press the Enter key, and the translated shell command will be displayed on the next line
 
-# python script to call open ai(for chinese user, which terminal is hard to be proxy)
-function prompt_to_command() {
-  local output=$(python ~/.oh-my-zsh/custom/plugins/chat-zsh/text2command.py "$1" "$OPENAI_API_KEY")
-  echo "$output"
-}
-
-# curl call open ai(recommand)
+# curl call LLM API
 function generate_command_response() {
   command_desc="$1"
   endpoint="$2"
   api_key="$3"
+  model_name="$4"
 
   # Send the request to the API
   response=$(curl --location -s $endpoint \
     --header "Authorization: Bearer $api_key" \
     --header "Content-Type: application/json" \
     --data "{
-    \"model\": \"gpt-3.5-turbo\",
+    \"model\": \"$model_name\",
     \"messages\": [
         {\"role\": \"system\", \"content\": \"You are a senior engineer who has mastered the command line ability of natural language translation. For the natural language input by the user, it is converted into a command line command according to the description content. Output may only contain executable commands, any other descriptive or explanatory text is prohibited. For the answer, you simply output a one-line translatable command, stripping out any description preceding the command.  1. For multi-line commands, use '&' or '&&' to connect. 2. For dangerous commands, add \\\"dangerous\\\" at the beginning of the command\"},
             {\"role\": \"user\", \"content\": \"mac安装node js\"},
@@ -38,11 +33,11 @@ function generate_command_response() {
 
 function prompt_to_command_sh() {
   local endpoint="https://api.openai.com/v1/chat/completions"
-  # specially provided for users who cannot directly access openai, for example use a proxy endpoint
+  # specially provided for user who can not directly access openai API, for example use a proxy endpoint or deepseek API
   if [[ -n $OPENAI_ENDPOINT ]]; then
     endpoint=$OPENAI_ENDPOINT
   fi
-  echo $(generate_command_response "$1" "$endpoint" "$OPENAI_API_KEY")
+  echo $(generate_command_response "$1" "$endpoint" "$OPENAI_API_KEY" "$MODEL_NAME")
 }
 
 function zsh_line_finish() {
